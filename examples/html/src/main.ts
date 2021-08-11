@@ -2,7 +2,7 @@ import './style.css'
 
 import gql, { client } from '@saltyaom/graphql'
 
-client.config('http://localhost:8080/graphql')
+client.config('http://api.opener.studio/graphql')
 
 window.addEventListener('DOMContentLoaded', () => {
 	gql(
