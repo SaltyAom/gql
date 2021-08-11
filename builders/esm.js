@@ -4,9 +4,9 @@ require('esbuild')
 		outdir: './build/esm',
 		format: 'esm',
 		bundle: true,
-		minify: true,
+		minify: false,
 		sourcemap: 'external',
-		keepNames: false,
+		keepNames: true,
 		external: ['isomorphic-unfetch'],
 		target: ['es2019']
 	})

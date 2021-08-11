@@ -2,11 +2,10 @@ import './style.css'
 
 import gql, { client } from '@saltyaom/graphql'
 
-client.config('http://api.opener.studio/graphql')
+client.config('http://localhost:8080/graphql')
 
-window.addEventListener('DOMContentLoaded', () => {
-	gql(
-		`query GetHentaiById($id: Int!) {
+gql(
+	`query GetHentaiById($id: Int!) {
       getHentaiById(id: $id) {
         success
         data {
@@ -17,10 +16,14 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     }
   `,
-		{
-			variables: {
-				id: 177013
+	{
+		variables: {
+			id: 177013
+		},
+		afterwares: [
+			(data, operation, variables) => {
+				console.log("A", data, operation, variables)
 			}
-		}
-	).then((data) => console.log(data))
-})
+		]
+	}
+).then((data) => console.log(data))

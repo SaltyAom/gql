@@ -1,10 +1,29 @@
 const isServer = typeof window == 'undefined'
 
 type Header = Omit<RequestInit, 'body'>
+type Middleware<T extends Object = Object, V extends Object = Object> = (
+	operationName: string,
+	variables: V
+) => T | undefined | null | void
+type Afterware<T extends Object = Object, V extends Object = Object> = (
+	data: T,
+	operationName: string,
+	variables: V
+) => T | undefined | null | void
+
+export interface GraphQLError {
+	message: string
+	locations: {
+		line: number
+		column: number
+	}
+}
 
 class Config {
 	private _endpoint = ''
 	private _headers: Header = {}
+	private _middlewares: Middleware[] = []
+	private _afterwares: Afterware[] = []
 
 	/**
 	 * Config GraphQL client
@@ -12,13 +31,30 @@ class Config {
 	 * @param endpoint {string} query URL destination
 	 * @param headers {Object} default `fetch` header
 	 */
-	config(endpoint: string, headers: Header = {}) {
+	config(
+		endpoint: string,
+		headers: Header = {},
+		{
+			middlewares = [],
+			afterwares = []
+		}: {
+			middlewares: Middleware[]
+			afterwares: Afterware[]
+		} = { middlewares: [], afterwares: [] }
+	) {
 		this._endpoint = endpoint
 		this._headers = headers
+		this._middlewares = middlewares
+		this._afterwares = afterwares
 	}
 
 	get cfg() {
-		return [this._endpoint, this._headers] as const
+		return [
+			this._endpoint,
+			this._headers,
+			this._middlewares,
+			this._afterwares
+		] as const
 	}
 }
 
@@ -55,11 +91,21 @@ interface Options<T extends Object = Object, V extends Object = Object> {
 	 */
 	config?: Header
 	/**
-	 * Custom middleware
+	 * Array of callback to be executed before the data is fetched
 	 *
-	 * @default null
+	 * Recommended for logging purpose
+	 *
+	 * @default []
 	 */
-	middlewares?: ((data: T, operationName: string, variables: V) => T)[] | null
+	middlewares?: Middleware<T, V>[]
+	/**
+	 * Array of callback to be executed after the data is fetched
+	 *
+	 * Recommended for logging purpose
+	 *
+	 * @default []
+	 */
+	afterwares?: Afterware<T, V>[]
 	/**
 	 * Minify query
 	 *
@@ -98,41 +144,36 @@ interface Options<T extends Object = Object, V extends Object = Object> {
  *   }
  * }).then((data) => console.log(data))
  **/
-const gql = async <T extends Object = Object>(
+const gql = async <T extends Object = Object, V extends Object = Object>(
 	query: string,
 	{
-		variables = {},
+		variables = {} as V,
 		config = {},
-		middlewares = null,
+		middlewares = [],
+		afterwares = [],
 		minify: min = true
-	}: Options<T>
-): Promise<T | Error> => {
+	}: Options<T, V>
+): Promise<T | GraphQLError[] | Error> => {
 	let get = (
 		isServer ? await import('isomorphic-unfetch') : fetch
 	) as typeof fetch
 
-	let [endpoint, headers] = client.cfg
+	let [endpoint, headers, baseMiddlewares, baseAfterwares] = client.cfg
 	let operationName = getOperationName(query)
 
-	console.log({
-		method: 'POST',
-		headers: {
-			'content-type': 'application/json',
-			mode: 'cors',
-			...headers.headers,
-			...config.headers
-		},
-		...headers,
-		...config,
-		body: JSON.stringify({
-			query: min ? minify(query) : query,
-			variables,
-			operationName
-		})
-	})
+	let _middlewares =
+		middlewares || (baseMiddlewares as unknown as Middleware<T, V>[])
+	let _afterwares =
+		afterwares || (baseAfterwares as unknown as Afterware<T, V>[])
+
+	for (let middleware of _middlewares) {
+		let predefined = middleware(operationName, variables)
+
+		if (predefined) return predefined
+	}
 
 	try {
-		let data: T = await get(endpoint, {
+		let { data, errors = null } = await get(endpoint, {
 			method: 'POST',
 			headers: {
 				'content-type': 'application/json',
@@ -149,9 +190,10 @@ const gql = async <T extends Object = Object>(
 			})
 		}).then((res) => res.json())
 
-		if (middlewares)
-			for (let middleware of middlewares)
-				data = middleware(data, operationName, variables) || data
+		if (errors) throw errors
+
+		for (let afterware of _afterwares)
+			data = afterware(data, operationName, variables) || data
 
 		return data
 	} catch (error) {

@@ -4,9 +4,9 @@ require('esbuild')
 		outdir: './build',
 		format: 'cjs',
 		bundle: true,
-		minify: false,
+		minify: true,
 		sourcemap: 'external',
-		keepNames: false,
+		keepNames: true,
 		external: ['isomorphic-unfetch'],
 		target: ['es2019']
 	})
