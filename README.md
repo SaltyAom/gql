@@ -3,7 +3,7 @@ Lightweight graphql client, minify query on fly.
 
 ## Feature
 - No dependencies.
-- Lightweight, just 600 bytes.
+- Lightweight, just 700 bytes.
 - Supports on both client and server.
 - Just simple fetch.
 - Minify query on flies
@@ -11,7 +11,7 @@ Lightweight graphql client, minify query on fly.
 - Built-in TypeScript
 
 ## Size
-Should be around 600 bytes, checkout [Bundlephobia](https://bundlephobia.com/package/@saltyaom/gql) for accurate result.
+Should be around 700 bytes, checkout [Bundlephobia](https://bundlephobia.com/package/@saltyaom/gql) for accurate result.
 
 ## Getting start
 ```bash
@@ -23,9 +23,9 @@ npm install @saltyaom/gql --save
 
 ## Example
 ```jsx
-import gql, { client } from '@saltyaom/graphql'
+import gql, { client } from '@saltyaom/gql'
 
-client.config('http://api.opener.studio/graphql')
+client.config('https://api.opener.studio/graphql')
 
 gql(`
   query GetHentaiById($id: Int!) {
@@ -68,9 +68,9 @@ You can implement custom plugin for transforming data, caching, logging, etc.
 
 ### Example
 ```typescript
-import gql, { client } from '@saltyaom/graphql'
+import gql, { client } from '@saltyaom/gql'
 
-client.config('http://api.opener.studio/graphql')
+client.config('https://api.opener.studio/graphql')
 
 gql(`
   query GetHentaiById($id: Int!) {

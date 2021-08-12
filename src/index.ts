@@ -122,9 +122,9 @@ interface Options<T extends Object = Object, V extends Object = Object> {
  * Supports only query and mutation.
  *
  * @example
- * import gql, { client } from '@saltyaom/graphql'
+ * import gql, { client } from '@saltyaom/gql'
  *
- * client.config('http://api.opener.studio/graphql')
+ * client.config('https://api.opener.studio/graphql')
  *
  * gql(`
  *   query GetHentaiById($id: Int!) {
