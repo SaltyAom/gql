@@ -73,14 +73,15 @@ import localCache from '@saltyaom/gql-local-cache'
 
 client.config(
   'https://api.opener.studio/graphql', 
-  undefined, 
-  [{
-    afterwares: [
-      ({ data, operationName, variables }) => {
-			  console.log('Logger:', data, operationName, variables)
-      }
-    ]
-  }]
+  {
+    plugins: [{
+      afterwares: [
+        ({ data, operationName, variables }) => {
+          console.log('Logger:', data, operationName, variables)
+        }
+      ]
+    }]
+  }
 )
 
 gql(
