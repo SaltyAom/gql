@@ -1,4 +1,4 @@
-# @saltyaom/graphql
+# @saltyaom/gql
 Lightweight graphql client, minify query on fly.
 
 ## Feature
@@ -69,27 +69,39 @@ You can implement custom plugin for transforming data, caching, logging, etc.
 ### Example
 ```typescript
 import gql, { client } from '@saltyaom/gql'
+import localCache from '@saltyaom/gql-local-cache'
 
-client.config('https://api.opener.studio/graphql')
+client.config(
+  'https://api.opener.studio/graphql', 
+  undefined, 
+  [{
+    afterwares: [
+      ({ data, operationName, variables }) => {
+			  console.log('Logger:', data, operationName, variables)
+      }
+    ]
+  }]
+)
 
-gql(`
-  query GetHentaiById($id: Int!) {
-    getHentaiById(id: $id) {
-      success
-      data {
-        title {
-          display
+gql(
+	`query GetHentaiById($id: Int!) {
+      getHentaiById(id: $id) {
+        success
+        data {
+          title {
+            display
+			      japanese
+          }
         }
       }
     }
-  }
-`,
-{
-  variables: {
-    id: 177013
-  },
-  afterwares: (data, operation, variables) => {
-    console.log(data, operation, variables)
-  }
-}).then((data) => console.log(data))
+  `,
+	{
+		variables: {
+			id: 177013
+		}
+	}
+).then((data) => {
+  console.log(data)
+})
 ```

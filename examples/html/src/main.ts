@@ -2,7 +2,15 @@ import './style.css'
 
 import gql, { client } from '@saltyaom/graphql'
 
-client.config('http://localhost:8080/graphql')
+client.config('https://api.opener.studio/graphql', undefined, [
+	{
+		afterwares: [
+			({ data, operationName, variables }) => {
+				console.log('Logger:', data, operationName, variables)
+			}
+		]
+	}
+])
 
 gql(
 	`query GetHentaiById($id: Int!) {
@@ -19,11 +27,6 @@ gql(
 	{
 		variables: {
 			id: 177013
-		},
-		afterwares: [
-			(data, operation, variables) => {
-				console.log("A", data, operation, variables)
-			}
-		]
+		}
 	}
-).then((data) => console.log(data))
+)

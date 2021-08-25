@@ -1,71 +1,42 @@
-const isServer = typeof window == 'undefined'
+import type { Header, Plugin, GraphQLError } from './types'
 
-type Header = Omit<RequestInit, 'body'>
-type Middleware<T extends Object = Object, V extends Object = Object> = (
-	operationName: string,
-	variables: V
-) => T | undefined | null | void
-type Afterware<T extends Object = Object, V extends Object = Object> = (
-	data: T,
-	operationName: string,
-	variables: V
-) => T | undefined | null | void
+/**
+ * GraphQL Client
+ *
+ * You can config client option here
+ *
+ * @example
+ * import gql, { config } from '@saltyaom/gq'
+ *
+ * client.config('http://api.opener.studio/graphql')
+ **/
+export const client: {
+	_e: string
+	_h: Header
+	_p: Plugin[]
+	config: (endpoint: string, header?: Header, plugins?: Plugin[]) => void
+} = {
+	_e: '',
+	_h: {},
+	_p: [],
 
-export interface GraphQLError {
-	message: string
-	locations: {
-		line: number
-		column: number
-	}
-}
-
-class Config {
-	private _endpoint = ''
-	private _headers: Header = {}
-	private _middlewares: Middleware[] = []
-	private _afterwares: Afterware[] = []
-
-	/**
-	 * Config GraphQL client
-	 *
-	 * @param endpoint {string} query URL destination
-	 * @param headers {Object} default `fetch` header
-	 */
-	config(
+	config: function (
 		endpoint: string,
-		headers: Header = {},
-		{
-			middlewares = [],
-			afterwares = []
-		}: {
-			middlewares: Middleware[]
-			afterwares: Afterware[]
-		} = { middlewares: [], afterwares: [] }
+		header: Header = {},
+		plugins: Plugin[] = []
 	) {
-		this._endpoint = endpoint
-		this._headers = headers
-		this._middlewares = middlewares
-		this._afterwares = afterwares
-	}
-
-	get cfg() {
-		return [
-			this._endpoint,
-			this._headers,
-			this._middlewares,
-			this._afterwares
-		] as const
+		this._e = endpoint
+		this._h = header
+		this._p = plugins
 	}
 }
-
-export const client = new Config()
 
 const getOperationName = (query: string) => {
 	let [_, __, operationName] =
 		query.match(/(query|mutation|subscription) (.*?) {/) ||
 		([false, '', ''] as const)
 
-	return operationName.split('(')[0]
+	return operationName.split('(')[0] || '_'
 }
 
 const minify = (query: string) => {
@@ -77,7 +48,7 @@ const minify = (query: string) => {
 		.replace(/\n/g, ' ')}`
 }
 
-interface Options<T extends Object = Object, V extends Object = Object> {
+interface Options<V extends Object = Object> {
 	/**
 	 * GraphQL variables
 	 *
@@ -91,21 +62,9 @@ interface Options<T extends Object = Object, V extends Object = Object> {
 	 */
 	config?: Header
 	/**
-	 * Array of callback to be executed before the data is fetched
-	 *
-	 * Recommended for logging purpose
-	 *
-	 * @default []
+	 * Plugins
 	 */
-	middlewares?: Middleware<T, V>[]
-	/**
-	 * Array of callback to be executed after the data is fetched
-	 *
-	 * Recommended for logging purpose
-	 *
-	 * @default []
-	 */
-	afterwares?: Afterware<T, V>[]
+	plugins?: Plugin[]
 	/**
 	 * Minify query
 	 *
@@ -149,28 +108,29 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 	{
 		variables = {} as V,
 		config = {},
-		middlewares = [],
-		afterwares = [],
+		plugins = [],
 		minify: min = true
-	}: Options<T, V>
+	}: Options<V> = {}
 ): Promise<T | GraphQLError[] | Error> => {
 	let get = (
-		isServer ? await import('isomorphic-unfetch') : fetch
+		typeof fetch == 'undefined' ? await import('isomorphic-unfetch') : fetch
 	) as typeof fetch
 
-	let [endpoint, headers, baseMiddlewares, baseAfterwares] = client.cfg
+	let { _e: endpoint, _h: headers, _p: basePlugins } = client
 	let operationName = getOperationName(query)
 
-	let _middlewares =
-		middlewares || (baseMiddlewares as unknown as Middleware<T, V>[])
-	let _afterwares =
-		afterwares || (baseAfterwares as unknown as Afterware<T, V>[])
+	let _plugins = [...basePlugins, ...plugins]
 
-	for (let middleware of _middlewares) {
-		let predefined = middleware(operationName, variables)
+	for (let plugin of _plugins)
+		for (let middleware of plugin.middlewares || []) {
+			let predefined = await middleware({
+				operationName,
+				variables,
+				query
+			})
 
-		if (predefined) return predefined
-	}
+			if (predefined) return predefined as T
+		}
 
 	try {
 		let { data, errors = null } = await get(endpoint, {
@@ -192,8 +152,15 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 
 		if (errors) throw errors
 
-		for (let afterware of _afterwares)
-			data = afterware(data, operationName, variables) || data
+		for (let plugin of _plugins)
+			for (let afterware of plugin.afterwares || [])
+				data =
+					(await afterware({
+						data,
+						operationName,
+						variables,
+						query
+					})) || data
 
 		return data
 	} catch (error) {
@@ -201,4 +168,13 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 	}
 }
 
+export type {
+	Header,
+	Operation,
+	DataOperation,
+	Middleware,
+	Afterware,
+	Plugin,
+	GraphQLError
+} from './types'
 export default gql
