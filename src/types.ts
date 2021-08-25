@@ -49,3 +49,8 @@ export interface GraphQLError {
 		column: number
 	}
 }
+
+export interface ConfigOption {
+	header?: Header
+	plugins?: Plugin[]
+}

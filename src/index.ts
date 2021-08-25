@@ -1,4 +1,4 @@
-import type { Header, Plugin, GraphQLError } from './types'
+import type { Header, Plugin, GraphQLError, ConfigOption } from './types'
 
 /**
  * GraphQL Client
@@ -14,7 +14,7 @@ export const client: {
 	_e: string
 	_h: Header
 	_p: Plugin[]
-	config: (endpoint: string, header?: Header, plugins?: Plugin[]) => void
+	config: (endpoint: string, option: ConfigOption) => void
 } = {
 	_e: '',
 	_h: {},
@@ -22,8 +22,7 @@ export const client: {
 
 	config: function (
 		endpoint: string,
-		header: Header = {},
-		plugins: Plugin[] = []
+		{ header = {}, plugins = [] } = {}
 	) {
 		this._e = endpoint
 		this._h = header
