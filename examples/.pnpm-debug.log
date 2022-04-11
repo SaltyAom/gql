@@ -1,0 +1,203 @@
+{
+  "0 debug pnpm:scope": {
+    "selected": 1
+  },
+  "1 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "html",
+      "version": "0.0.0",
+      "scripts": {
+        "dev": "vite",
+        "build": "tsc && vite build",
+        "serve": "vite preview"
+      },
+      "dependencies": {
+        "@saltyaom/gql": ".."
+      },
+      "devDependencies": {
+        "typescript": "^4.3.2",
+        "vite": "^2.4.4"
+      }
+    },
+    "prefix": "/Users/saltyaom/Documents/web/gql/examples"
+  },
+  "2 debug pnpm:context": {
+    "currentLockfileExists": false,
+    "storeDir": "/Users/saltyaom/.pnpm-store/v3",
+    "virtualStoreDir": "/Users/saltyaom/Documents/web/gql/examples/node_modules/.pnpm"
+  },
+  "3 debug pnpm:stage": {
+    "prefix": "/Users/saltyaom/Documents/web/gql/examples",
+    "stage": "resolution_started"
+  },
+  "4 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/typescript/4.5.5",
+    "wanted": {
+      "dependentId": ".",
+      "name": "typescript",
+      "rawSpec": "^4.3.2"
+    }
+  },
+  "5 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/vite/2.7.13",
+    "wanted": {
+      "dependentId": ".",
+      "name": "vite",
+      "rawSpec": "^2.4.4"
+    }
+  },
+  "6 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/typescript/4.5.5",
+    "requester": "/Users/saltyaom/Documents/web/gql/examples",
+    "status": "resolved"
+  },
+  "7 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/typescript/4.5.5",
+    "requester": "/Users/saltyaom/Documents/web/gql/examples",
+    "status": "found_in_store"
+  },
+  "8 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/vite/2.7.13",
+    "requester": "/Users/saltyaom/Documents/web/gql/examples",
+    "status": "resolved"
+  },
+  "9 debug pnpm:progress": {
+    "packageId": "registry.npmjs.org/vite/2.7.13",
+    "requester": "/Users/saltyaom/Documents/web/gql/examples",
+    "status": "found_in_store"
+  },
+  "10 error pnpm": {
+    "code": "ERR_PNPM_NO_MATCHING_VERSION",
+    "packageMeta": {
+      "name": "@saltyaom/gql",
+      "dist-tags": {
+        "latest": "1.1.3"
+      },
+      "versions": {
+        "1.0.0": {
+          "name": "@saltyaom/gql",
+          "version": "1.0.0",
+          "dependencies": {
+            "isomorphic-unfetch": "^3.1.0"
+          },
+          "devDependencies": {
+            "esbuild": "^0.12.18",
+            "typescript": "^4.3.5"
+          },
+          "dist": {
+            "shasum": "7b58d4332babd755ddf7023f062d498d5c118d93",
+            "integrity": "sha512-cyTwWYWH0faMWHlv4GwpXTNeBIG7oBN+YPZl4BOPecsnWfjYkGLecgO7kYwJ1r8/ROWEBKvu+YW+F/V6Y2ULJA==",
+            "tarball": "https://registry.npmjs.org/@saltyaom/gql/-/gql-1.0.0.tgz",
+            "fileCount": 21,
+            "unpackedSize": 55373,
+            "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.13\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJhFCdACRA9TVsSAnZWagAAg8sP/0IYpjhu3YCUQAMY1YuL\n4Z71wP8YtsPFzl07KQDttH7uBKgYvQ8JkroZ/2xfG17nFXMms7xVje4iGmBg\nI/RubqKUYvbUxQ+mecd/uTQ5t5hqw0ybKMA265qohAaVmGvxtNyry7dE8fY+\neWm/lyNYDZnl/L6YLeWBE7WBh8UnBwCCQNKr7uoWisNudANWr4/B7iHRBM80\nlivroBC2Qo+Uwyy7ufpjuJPAQmC3jOLbV1qGTl9+Q/D+oDZ105QPC1P565xF\nkr+rD66gq9CLWRgdGnZ5QaZT/SqBN/NMAgXH+mp63ZV455HmyLfoDFZJPIPH\n9yaRjez5FxWeiclVLRvSeEugO/MejarUv8YbMsSLMu7YQiKMfAoWahMgzgf5\nktl4bsgIE3M9RWuXK+LR/ULnybxPeh9UogzNB4aSIb5ABV1raU13LAq1C22G\nfoy3WoT7ZDl9HXEHjVoj9O+FRo1Oofs6qVM8f3I1GkQOXZShHK8B47Q9cFXS\nWN8fThiWqLYhqUZbX040Lt74SbxJIwFpSb74ZZg+W7aLgkMYRzPfmK74opbI\nMU5fZ8DpvO5fYwQCk9VWo09XVj+zt6Zdy4M1onOTsvr/li55ieWoX/LKUH14\nTwO8/pTZAqB0h2hh4B5LkmykqQ0U1rHMFPLcjgEArc8mVrpy9o6mMdqQHy/u\nq2nL\r\n=fLHW\r\n-----END PGP SIGNATURE-----\r\n"
+          }
+        },
+        "1.0.1": {
+          "name": "@saltyaom/gql",
+          "version": "1.0.1",
+          "dependencies": {
+            "isomorphic-unfetch": "^3.1.0"
+          },
+          "devDependencies": {
+            "esbuild": "^0.12.18",
+            "typescript": "^4.3.5"
+          },
+          "dist": {
+            "shasum": "fb8cb06ab16ec199d909c916b858460530416625",
+            "integrity": "sha512-GbqgsL9f+pFCSIyLQYQxXsOD6zzHXkSw7kK7dBGAMOGvRRoBz+bvFd2nr9LOsQlk41P62FO8BdrjaaATxn7A5Q==",
+            "tarball": "https://registry.npmjs.org/@saltyaom/gql/-/gql-1.0.1.tgz",
+            "fileCount": 21,
+            "unpackedSize": 55321,
+            "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.13\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJhFCexCRA9TVsSAnZWagAAazMP/jORqBy49THXUIdziQxP\nelOJtT+rDhBcUM7yL9pc1cA2IwACtutTOOqHzix/n8RhdsPjpTvdAQBdE4It\nxI1VMPUupD3NwEwApXLi58UI8ntXCyTgm26M47i3ymwHBNPPF14gB7KnInx3\nZlv4bSS9gQoJX4XI4PfedAjTnQ6D60z5V2dPUH0xMBjDfmDjGm8SiHtSmSaZ\netpSbMzEW6ZNlcFoIZti05X7jNrFxdQPZLyY2xpyOSu2N9omJDcj2pp2DPfj\nySC0Gqsc+tveQUClomFBpnQpspNcFcT4NM8UDeKmJ5K0ECsAfvXz3YGAX3DJ\n6BSrdNU61T9Ke1p//TURLz9dkuGkpJIK5/Zr6ytyEsySa1nwurj/wkbrKa6G\n2eKLpRyLp0RwaiKacJ9nWfUw3HuiRlUIpYtd9u5Y/CtGtYss1KytS/sf+sK+\nMbv2Cr+5fVVu+jzDGFOU5MpJZiW19Gtq6101j9dhq56W1q6I/YN4IdUstOeT\n5U54IfVeUMEqwDmWXU0MqkAUICAXP3KKrTM8LhXP85nFhIQ1MxRtXiafLxcr\nJdXT69/puHYF7SioZcu2pjBL6r9/+QJjUUcItT9+cAnYc9pEUlWjoBgyOlAp\n5zjiuwBNMcS4fZ4LVXjESrzvQOIP6HrnOPuk3p+LwNW5ztTSuxejt0FKTqHl\nHUUp\r\n=L2Ha\r\n-----END PGP SIGNATURE-----\r\n"
+          }
+        },
+        "1.1.0": {
+          "name": "@saltyaom/gql",
+          "version": "1.1.0",
+          "dependencies": {
+            "isomorphic-unfetch": "^3.1.0"
+          },
+          "devDependencies": {
+            "esbuild": "^0.12.18",
+            "typescript": "^4.3.5"
+          },
+          "dist": {
+            "shasum": "bf8c381747eb241afe49838b4cbacb6fe233cfba",
+            "integrity": "sha512-FTR63Dww+KKIvtBgVrATyRl1ouGpI7Y380ldvZvydsE7SyNdNRYpHk8F2vN/uFaezJy3UZOXyglL+noE69L/yw==",
+            "tarball": "https://registry.npmjs.org/@saltyaom/gql/-/gql-1.1.0.tgz",
+            "fileCount": 21,
+            "unpackedSize": 53679,
+            "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.13\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJhJdRFCRA9TVsSAnZWagAA5GgQAJj6MD7CCUxRToOCanYK\nWhuR9V4OkkIwZ82oKKa2ySi6kIo0s8wf0BAhUG1bzwBJ+kL8lG+PjBzZMkIx\nJlcKbJ6Ne6fcojaGpQTo0f/WmobgOYynph3eDPC1Q4HuIo66uBDxfgcejbv2\nkOqeQPK23lQL2XzsUoDogDz2USJG360YF6YOgf6elRTcmKkJTb7WCTPfsI2J\nlfJAwsI38niO8sMUQ90nNbufXIMG1tHybmpq6IlFIPdDNMnnK5H3uzZtss5Z\nVTzGkQCFtP7oEV7JrgrTdHxC02lIzwxRoUzyqKKBjHFFTEVsCTyv8QGgriXC\nRUajLmEYk96UXBeq+fU5aeC8LkoapVvkpRJTSK727Zc2Xx3GaKd7oPGAFk4a\nYvC1tLQS/T37WxDdx9VpDRvVFHHaj5zYjVeQuasmQl4T6494uk8zuGm701O5\nZpKkOOeFSaJI50vN+0njtNesATP03kxAPgZyH002yX9cL6CkN1mC7YMzJH0C\nRrhv4OByowPFw2+FuQye024qkP37M2aE0gz8tiqDDQ64X3O9b2PLu452IlvN\nZOCahtvB3Agzhn0MKu4f9Qwqb6iS8ZTJsS0v7Pm+ieuNPpGSFk94Gi9RVQhc\nco/hrUOkj45K+e+9s1F9ABZ8H0RIuAe22krjVkTO/DKWFkJGtURPhvKrNQZp\nHJEf\r\n=0Uou\r\n-----END PGP SIGNATURE-----\r\n"
+          }
+        },
+        "1.1.1": {
+          "name": "@saltyaom/gql",
+          "version": "1.1.1",
+          "dependencies": {
+            "isomorphic-unfetch": "^3.1.0"
+          },
+          "devDependencies": {
+            "esbuild": "^0.12.18",
+            "typescript": "^4.3.5"
+          },
+          "dist": {
+            "shasum": "dbee1ea6488e29eca0831ee6326d2d6b129ab55b",
+            "integrity": "sha512-cMZGi7A5lzHrGknI9r4rPmj2A7ETI/x5pKAx5vkcs4HA1ciRlyQf7Up5qzV0D850e3LssiQFc0eEDOnKTDS40w==",
+            "tarball": "https://registry.npmjs.org/@saltyaom/gql/-/gql-1.1.1.tgz",
+            "fileCount": 26,
+            "unpackedSize": 53751,
+            "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.13\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJhJkqxCRA9TVsSAnZWagAAnFQP/1KZW37ErcPQdfRKc6y1\nBJHETwNqyMMb++Cy2h9Igh0nZfHEjTl+NR84J1x5t0PzAKP/tdiW53W8k+qZ\n0/EwV7sAQ1GHwgRc04BVSuLXESqhvTaJWTQP9EF+5ji3PwjK/G4JdCuyMuao\nBG9MMTOmHxuyW8wd8CStrma/DIi+0+ZqsCSSoDxmubrHy+di2ENHx5uGBiGH\n4FoYXM9p2qMYBZoE1AamS/Lmzeg+FoCfQ+N8k/TeGYex5lYbY0oPCaSF4nB1\n1Pc/NNw7vZhr3IuNX+mLB0DK0DZOuIwut8FVRpyCVbcyQI0Vv8FrK6av6p6O\no8iC5KDRAHM9GabM9sKQTf+pbdk6xe59AavFOfjrgfbQGe5O3o9OC0NMVJ/I\nh3xJPNIXFl1fvsHPKzdDM8Enr9oPsghytXuDQtv2Oet7S4cOrRdfQwBQlk+c\nJyNv8EySodKzKkLYrUvNI+0wekSY5jny/9fkxSDzpTZS6oWQegKW1za/1Rrw\n5Nip9v3SoBhrYGrVAQBUbI0meleMvrgR5JYtU+VhvvfkOksxp0mOxeRUyQ0i\nLTt456NM4sFCYHSTEaq9rB6ZZIipR7zNeX/NCP/KODeN+7MLqZHbByf9MFQz\n2nIzdqqEZmaH5OPMC1T8vwzwai/p5sPpUllpUpEEoPWlVD10cs7iQMp69wpq\nPfIv\r\n=i9IG\r\n-----END PGP SIGNATURE-----\r\n"
+          }
+        },
+        "1.1.2": {
+          "name": "@saltyaom/gql",
+          "version": "1.1.2",
+          "dependencies": {
+            "isomorphic-unfetch": "^3.1.0"
+          },
+          "devDependencies": {
+            "esbuild": "^0.12.18",
+            "typescript": "^4.3.5"
+          },
+          "dist": {
+            "shasum": "d31765dbaff6569d6ed077917742c0e7786da910",
+            "integrity": "sha512-iqV71OIsqk6hzIZsAQOyWJqf1QcElysHspm0N0t4uhh7VF/8ycRWFN0SNUBQB7vARl6+XRy86GaOVG66f5Jfkg==",
+            "tarball": "https://registry.npmjs.org/@saltyaom/gql/-/gql-1.1.2.tgz",
+            "fileCount": 26,
+            "unpackedSize": 54216,
+            "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.13\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJhJmyMCRA9TVsSAnZWagAAqaUP/2A4Mztxa239tLTEWMLj\n/kQsmPlO2xqba+KAWv0f3kV9FpbBEqA3341VgZmahMrKnB/61v1mM42o/qZF\ne8pZ0Jn3wUnUxal18a1egd/bcsBPm00LWM5cwWmUC/YmWOoPdvh3hgdg1E8b\no2zjN3zF4gdZvtuxeUo4FFK37qDgEZbhWa/aGlQsj8gRfRdADRLnqBC3NcYo\nlPki9yDFbYBN4/K+tG/bM5+L/dHEGMVsmIPaAv+DIy7ntsIgtQCS78jyTled\nI37QK08KG9LqxwGkCsGYxxUM6Q0ybnptA+Uvgd0mwrjU+VPufZoW42q0FFyo\nOLwJhIQpAW+WzdcOIvUNTiyIh/ONUAKR1D41ozw2RZ7JvZYEtDAdaQ+KwxvL\nYemz82MrM80OtLRlbhpnbuGRPkhStbGYtx5GqDgr+eHW6ExD0NFdlUicvkop\ngPrhtgTdWRSAZLrKyzo2eDxWoERiWYVhQTjJyv41kKtUxpt6VU1RLJNujAGg\nD48BUPZW1krgwXZQfcVNQRfEhdeEwfcI+aTXYED3oyrxR7Ecn+JR82WX9Zmf\nwJhMTUmftx48eExMvZRbs+oOJAZJ1SSOo43Z+Qsy6E0J0179l3o8Tw0qkrGZ\n0YFZDKs+0Yan5mtj+Cb4MfQfQZwTvZ8ev/Peahn2fzniho+3xc+TdXhJYMYX\nFEyf\r\n=6DTN\r\n-----END PGP SIGNATURE-----\r\n"
+          }
+        },
+        "1.1.3": {
+          "name": "@saltyaom/gql",
+          "version": "1.1.3",
+          "dependencies": {
+            "isomorphic-unfetch": "^3.1.0"
+          },
+          "devDependencies": {
+            "esbuild": "^0.12.18",
+            "typescript": "^4.3.5"
+          },
+          "dist": {
+            "shasum": "57833927f3008859d2896f22b0d3ee854fcd5a5e",
+            "integrity": "sha512-xOM4L4+jr/oSObILKT6zT0TAi6u7mPLpkqH707MCORMbD8AFpvN9sa+PV9nUCDOgQ+IypysQZc7sYeiullHz0w==",
+            "tarball": "https://registry.npmjs.org/@saltyaom/gql/-/gql-1.1.3.tgz",
+            "fileCount": 26,
+            "unpackedSize": 55157,
+            "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.13\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJh2ZmOCRA9TVsSAnZWagAArFAP/jOdoFUbS6x5ER6qgHi/\nqNUkuwwqotE9ShytUW//gICSfAoJjFQIRNTByYk49kaVhkj5cjw812be/UcY\nf5XbN89eKmXrP23Z4I9hxEAbz8/vFCME1UF5iw1rU9taXm12xGw7zfSEmJ6C\nk2gYSeauSkWUcSNQVOLxHYWwhMYDxaOHheuht57EkKJFeaXUJSa9ahckHGeE\nJjaE0YdDsLsr3oZadQvdWNagel0fLZBevm63LkxKfwY4yKHiiBig2LU4G4Hn\n6G5C4J2WmFTtwMQcgBG2KMzKx6nBpZCWrqC13j7TZANgVcBG09KVdhkg6gmF\nwahvuP83MQOLuRv8Qu9R39SfU5iOn8lCoRdbkaP8xgfb/orw6zfjgyYemiLX\nHKFTl3NwsYs2HP3sux7x721UMlLRH/Ga32pxS4q1wnqACfC3Gcl0MVtOYOFX\nnrzuTKFpYwxLwscGlqchSgVZJC0qKMcrFFkBQuIQT5KLYuJy6/NV4QF5DEnw\nDnPhQkSwZRVw9pljqA3Nv0M1aHLkDLEktSUW45FKLoo1bEaPtPMrGiArYcbV\nHneh3KiI76y5Y9VjOyfOzD58LB1ckcbs1wlGFtEb7KYuzkdc/jBvzjbKurxR\nWWqQkFbHPfWkefnUgksOWI9/wCLMkyskDacTF1UiaMvv09chZ4i0fRszCdn1\nlAX7\r\n=eUcp\r\n-----END PGP SIGNATURE-----\r\n"
+          }
+        }
+      },
+      "modified": "2022-01-08T14:02:56.090Z",
+      "cachedAt": 1643105107976
+    },
+    "pkgsStack": [],
+    "err": {
+      "name": "pnpm",
+      "message": "No matching version found for @saltyaom/gql@..",
+      "code": "ERR_PNPM_NO_MATCHING_VERSION",
+      "stack": "pnpm: No matching version found for @saltyaom/gql@..\n    at resolveNpm (/opt/homebrew/lib/node_modules/pnpm/dist/pnpm.cjs:85595:15)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async Object.resolve (/opt/homebrew/lib/node_modules/pnpm/dist/pnpm.cjs:85779:34)\n    at async run (/opt/homebrew/lib/node_modules/pnpm/dist/pnpm.cjs:71433:23)"
+    }
+  }
+}

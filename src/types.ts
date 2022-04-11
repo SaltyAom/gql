@@ -54,3 +54,28 @@ export interface ConfigOption {
 	header?: Header
 	plugins?: Plugin[]
 }
+
+export interface Options<V extends Object = Object> {
+	/**
+	 * GraphQL variables
+	 *
+	 * @default {}
+	 */
+	variables?: V
+	/**
+	 * `fetch` config
+	 *
+	 * @default {}
+	 */
+	config?: Header
+	/**
+	 * Plugins
+	 */
+	plugins?: Plugin[]
+	/**
+	 * Custom endpoint
+	 *
+	 * @default ''
+	 */
+	endpoint?: string
+}

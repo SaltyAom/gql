@@ -1,81 +1,11 @@
-import type { Header, Plugin, GraphQLError, ConfigOption } from './types'
+import { client, getOperationName } from './services'
 
-/**
- * GraphQL Client
- *
- * You can config client option here
- *
- * @example
- * import gql, { config } from '@saltyaom/gq'
- *
- * client.config('http://api.opener.studio/graphql')
- **/
-export const client: {
-	_e: string
-	_h: Header
-	_p: Plugin[]
-	config: (endpoint: string, option: ConfigOption) => void
-} = {
-	_e: '',
-	_h: {},
-	_p: [],
-
-	config: function (
-		endpoint: string,
-		{ header = {}, plugins = [] } = {}
-	) {
-		this._e = endpoint
-		this._h = header
-		this._p = plugins
-	}
-}
-
-const getOperationName = (query: string) => {
-	let [_, __, operationName] =
-		query.match(/(query|mutation|subscription) (.*?) {/) ||
-		([false, '', ''] as const)
-
-	return operationName.split('(')[0] || '_'
-}
-
-const minify = (query: string) => {
-	let [header, ...restQuery] = query.split(/{/)
-
-	return `${header}{${restQuery
-		.join('{')
-		.replace(/\ /g, '')
-		.replace(/\n/g, ' ')}`
-}
-
-interface Options<V extends Object = Object> {
-	/**
-	 * GraphQL variables
-	 *
-	 * @default {}
-	 */
-	variables?: V
-	/**
-	 * `fetch` config
-	 *
-	 * @default {}
-	 */
-	config?: Header
-	/**
-	 * Plugins
-	 */
-	plugins?: Plugin[]
-	/**
-	 * Minify query
-	 *
-	 * @default true
-	 */
-	minify?: boolean
-}
+import type { GraphQLError, Options } from './types'
 
 /**
  * SaltyAom's GraphQL
  *
- * Lightweight graphql client, minify query on fly.
+ * Lightweight graphql client.
  *
  * Supports only query and mutation.
  *
@@ -108,7 +38,7 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 		variables = {} as V,
 		config = {},
 		plugins = [],
-		minify: min = true
+		endpoint: customEndpoint
 	}: Options<V> = {}
 ): Promise<T | GraphQLError[] | Error> => {
 	let get = (
@@ -132,7 +62,10 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 		}
 
 	try {
-		let { data, errors = null } = await get(endpoint, {
+		/**
+		 * Using Request so service worker can intercept the request
+		 */
+		let request = new Request(customEndpoint || endpoint, {
 			method: 'POST',
 			headers: {
 				'content-type': 'application/json',
@@ -143,11 +76,15 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 			...headers,
 			...config,
 			body: JSON.stringify({
-				query: min ? minify(query) : query,
+				query,
 				variables,
 				operationName
 			})
-		}).then((res) => res.json())
+		})
+
+		let { data, errors = null } = await get(request).then((res) =>
+			res.json()
+		)
 
 		if (errors) throw errors
 
@@ -163,9 +100,11 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 
 		return data
 	} catch (error) {
-		return error
+		return error as Error
 	}
 }
+
+export { client } from './services'
 
 export type {
 	Header,
