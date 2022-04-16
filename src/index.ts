@@ -65,7 +65,7 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 		/**
 		 * Using Request so service worker can intercept the request
 		 */
-		let request = new Request(customEndpoint || endpoint, {
+		let { data, errors = null } = await get(customEndpoint || endpoint, {
 			method: 'POST',
 			headers: {
 				'content-type': 'application/json',
@@ -80,11 +80,7 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 				variables,
 				operationName
 			})
-		})
-
-		let { data, errors = null } = await get(request).then((res) =>
-			res.json()
-		)
+		}).then((res) => res.json())
 
 		if (errors) throw errors
 
