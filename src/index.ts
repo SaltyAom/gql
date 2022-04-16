@@ -1,3 +1,4 @@
+import fetch from 'isomorphic-unfetch'
 import { client, getOperationName } from './services'
 
 import type { GraphQLError, Options } from './types'
@@ -41,10 +42,6 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 		endpoint: customEndpoint
 	}: Options<V> = {}
 ): Promise<T | GraphQLError[] | Error> => {
-	let get = (
-		typeof fetch == 'undefined' ? await import('isomorphic-unfetch') : fetch
-	) as typeof fetch
-
 	let { _e: endpoint, _h: headers, _p: basePlugins } = client
 	let operationName = getOperationName(query)
 
@@ -65,7 +62,7 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 		/**
 		 * Using Request so service worker can intercept the request
 		 */
-		let { data, errors = null } = await get(customEndpoint || endpoint, {
+		let { data, errors = null } = await fetch(customEndpoint || endpoint, {
 			method: 'POST',
 			headers: {
 				'content-type': 'application/json',
