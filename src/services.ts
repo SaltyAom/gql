@@ -14,7 +14,7 @@ import type { Header, Plugin, ConfigOption } from './types'
 	_e: string
 	_h: Header
 	_p: Plugin[]
-	config: (endpoint: string, option: ConfigOption) => void
+	config: (endpoint: string, option?: ConfigOption) => void
 } = {
 	_e: '',
 	_h: {},
