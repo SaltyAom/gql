@@ -39,7 +39,8 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 		variables = {} as V,
 		config = {},
 		plugins = [],
-		endpoint: customEndpoint
+		endpoint: customEndpoint,
+		method = 'POST'
 	}: Options<V> = {}
 ): Promise<T | GraphQLError[] | Error> => {
 	let { _e: endpoint, _h: headers, _p: basePlugins } = client
@@ -63,7 +64,7 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 		 * Using Request so service worker can intercept the request
 		 */
 		let { data, errors = null } = await fetch(customEndpoint || endpoint, {
-			method: 'POST',
+			method,
 			headers: {
 				'content-type': 'application/json',
 				mode: 'cors',

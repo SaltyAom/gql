@@ -78,4 +78,8 @@ export interface Options<V extends Object = Object> {
 	 * @default ''
 	 */
 	endpoint?: string
+	/**
+	 * Custom Method
+	 */
+	method?: string
 }
