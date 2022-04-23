@@ -6,7 +6,7 @@ require('esbuild')
 		bundle: true,
 		minify: true,
 		sourcemap: 'external',
-		keepNames: false,
+		keepNames: true,
 		external: ['isomorphic-unfetch'],
 		target: ['es2019']
 	})
