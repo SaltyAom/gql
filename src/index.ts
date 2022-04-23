@@ -34,12 +34,39 @@ export const client: {
 	}
 }
 
-export const getOperationName = (query: string) => {
-	let [_, __, operationName] =
-		query.match(/(query|mutation|subscription) (.*?) {/) ||
-		([false, '', ''] as const)
+const getOperationIndex = (query: string) => {
+	let index = query.indexOf('query')
+	if (index > -1) return index + 6
 
-	return operationName.split('(')[0] || '_'
+	index = query.indexOf('mutation')
+	if (index > -1) return index + 9
+
+	index = query.indexOf('subscription')
+	if (index > -1) return index + 13
+
+	return -1
+}
+
+const getOperationDelimiter = (operationName: string) => {
+	const bracketDelimiter = operationName.indexOf('(')
+	const spaceDelimiter = operationName.indexOf(' ')
+
+	// Only circumstance index is equal is that both is -1
+	if (bracketDelimiter === spaceDelimiter) return -1
+
+	return spaceDelimiter > bracketDelimiter ? bracketDelimiter : spaceDelimiter
+}
+
+export const getOperationName = (query: string) => {
+	let opIndex = getOperationIndex(query)
+	if (opIndex === -1) return '_'
+
+	let operationName = query.substring(opIndex)
+
+	let delimiterIndex = getOperationDelimiter(operationName)
+	if (delimiterIndex === -1) return '_'
+
+	return operationName.substring(0, delimiterIndex) || '_'
 }
 
 /**
@@ -85,7 +112,7 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 	let { _e: endpoint, _h: headers, _p: basePlugins } = client
 	let operationName = getOperationName(query)
 
-	let _plugins = [...basePlugins, ...plugins]
+	let _plugins = basePlugins.concat(plugins)
 
 	for (let plugin of _plugins)
 		for (let middleware of plugin.middlewares || []) {
@@ -122,14 +149,16 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 		if (errors) throw errors
 
 		for (let plugin of _plugins)
-			for (let afterware of plugin.afterwares || [])
-				data =
-					(await afterware({
-						data,
-						operationName,
-						variables,
-						query
-					})) || data
+			for (let afterware of plugin.afterwares || []) {
+				const mutated = await afterware({
+					data,
+					operationName,
+					variables,
+					query
+				})
+
+				if (mutated) data = mutated
+			}
 
 		return data
 	} catch (error) {

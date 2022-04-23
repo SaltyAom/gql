@@ -31,4 +31,4 @@ gql(
 			id: 177013
 		}
 	}
-)
+).then((a) => console.log(a))
