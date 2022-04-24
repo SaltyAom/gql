@@ -1,11 +1,51 @@
 import fetch from 'isomorphic-unfetch'
+
+import { getOperationName } from './services'
 import type {
 	GraphQLError,
 	Options,
-	Header,
+	FetchConfig,
 	Plugin,
-	ConfigOption
+	ConfigOption,
+	Configure,
+	Client,
+	CreateClient
 } from './types'
+
+/**
+ * Create custom client instance
+ *
+ * You can config client option here
+ *
+ * @example
+ * import gql, { createClient } from '@saltyaom/gq'
+ *
+ * const client = createClient('http://api.opener.studio/graphql')
+ **/
+
+export const createClient: CreateClient = (
+	endpoint,
+	{ config = {}, plugins = [], timeout = 5000 } = {}
+) => {
+	const client: Client = {
+		_e: '',
+		_c: {},
+		_p: [],
+		_t: 10000,
+
+		config: function (
+			endpoint,
+			{ config = {}, plugins = [], timeout = 10000 } = {}
+		) {
+			this._e = endpoint
+			this._c = config
+			this._p = plugins
+			this._t = timeout
+		}
+	}
+
+	return client
+}
 
 /**
  * GraphQL Client
@@ -17,57 +57,8 @@ import type {
  *
  * client.config('http://api.opener.studio/graphql')
  **/
-export const client: {
-	_e: string
-	_h: Header
-	_p: Plugin[]
-	config: (endpoint: string, option?: ConfigOption) => void
-} = {
-	_e: '',
-	_h: {},
-	_p: [],
-
-	config: function (endpoint: string, { header = {}, plugins = [] } = {}) {
-		this._e = endpoint
-		this._h = header
-		this._p = plugins
-	}
-}
-
-const getOperationIndex = (query: string) => {
-	let index = query.indexOf('query')
-	if (index > -1) return index + 6
-
-	index = query.indexOf('mutation')
-	if (index > -1) return index + 9
-
-	index = query.indexOf('subscription')
-	if (index > -1) return index + 13
-
-	return -1
-}
-
-const getOperationDelimiter = (operationName: string) => {
-	const bracketDelimiter = operationName.indexOf('(')
-	const spaceDelimiter = operationName.indexOf(' ')
-
-	// Only circumstance index is equal is that both is -1
-	if (bracketDelimiter === spaceDelimiter) return -1
-
-	return spaceDelimiter > bracketDelimiter ? bracketDelimiter : spaceDelimiter
-}
-
-export const getOperationName = (query: string) => {
-	let opIndex = getOperationIndex(query)
-	if (opIndex === -1) return '_'
-
-	let operationName = query.substring(opIndex)
-
-	let delimiterIndex = getOperationDelimiter(operationName)
-	if (delimiterIndex === -1) return '_'
-
-	return operationName.substring(0, delimiterIndex) || '_'
-}
+const defaultClient = createClient('')
+export { defaultClient as client }
 
 /**
  * SaltyAom's GraphQL
@@ -79,21 +70,22 @@ export const getOperationName = (query: string) => {
  * @example
  * import gql, { client } from '@saltyaom/gql'
  *
- * client.config('https://api.opener.studio/graphql')
+ * client.config('https://api.hifumin.app/graphql')
  *
  * gql(`
  *   query GetHentaiById($id: Int!) {
  *     getHentaiById(id: $id) {
  *       success
  *       data {
+ *         id
  *         title {
  *           display
  *         }
  *       }
  *     }
- *   }
- * `,
+ *   }`,
  * {
+ *   client,
  *   variables: {
  *     id: 177013
  *   }
@@ -102,6 +94,7 @@ export const getOperationName = (query: string) => {
 const gql = async <T extends Object = Object, V extends Object = Object>(
 	query: string,
 	{
+		client = defaultClient,
 		variables = {} as V,
 		config = {},
 		plugins = [],
@@ -109,10 +102,11 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 		method = 'POST'
 	}: Options<V> = {}
 ): Promise<T | GraphQLError[] | Error> => {
-	let { _e: endpoint, _h: headers, _p: basePlugins } = client
+	let { _e: endpoint, _c: fetchConfig, _p: basePlugins } = client
 	let operationName = getOperationName(query)
 
 	let _plugins = basePlugins.concat(plugins)
+	let fromCache: T | null = null
 
 	for (let plugin of _plugins)
 		for (let middleware of plugin.middlewares || []) {
@@ -122,35 +116,48 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 				query
 			})
 
-			if (predefined) return predefined as T
+			// ? All middleware must be executed to prevent request blocking
+			if (!fromCache && predefined) fromCache = predefined as T
 		}
 
+	if (fromCache) return fromCache
+
 	try {
-		/**
-		 * Using Request so service worker can intercept the request
-		 */
+		let controller = new AbortController()
+
+		let timeout: number | null = null
+		if (config.timeout)
+			timeout = setTimeout(() => {
+				controller.abort()
+				throw new Error('Request timeout')
+			}, config.timeout) as unknown as number
+
 		let { data, errors = null } = await fetch(customEndpoint || endpoint, {
 			method,
+			...fetchConfig,
+			...config,
 			headers: {
 				'content-type': 'application/json',
-				mode: 'cors',
-				...headers.headers,
-				...config.headers
+				...fetchConfig.headers,
+				...config.config?.headers
 			},
-			...headers,
-			...config,
+			signal: controller.signal,
 			body: JSON.stringify({
 				query,
 				variables,
 				operationName
 			})
-		}).then((res) => res.json())
+		}).then((res) => {
+			if (timeout) clearTimeout(timeout)
+
+			return res.json()
+		})
 
 		if (errors) throw errors
 
 		for (let plugin of _plugins)
 			for (let afterware of plugin.afterwares || []) {
-				const mutated = await afterware({
+				let mutated = await afterware({
 					data,
 					operationName,
 					variables,
@@ -167,12 +174,13 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 }
 
 export type {
-	Header,
-	Operation,
-	DataOperation,
-	Middleware,
-	Afterware,
+	GraphQLError,
+	Options,
+	FetchConfig,
 	Plugin,
-	GraphQLError
+	ConfigOption,
+	Configure,
+	Client,
+	CreateClient
 } from './types'
 export default gql
