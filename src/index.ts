@@ -127,7 +127,9 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 		return data
 	}
 
-	for (let plugin of _plugins)
+	for (let plugin of _plugins) {
+		if (fromCache) break
+
 		for (let middleware of plugin.middlewares || []) {
 			let predefined = await middleware({
 				operationName,
@@ -135,9 +137,9 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 				query
 			})
 
-			// ? All middleware must be executed to prevent request blocking
-			if (!fromCache && predefined) fromCache = predefined as T
+			if (predefined) fromCache = predefined as T
 		}
+	}
 
 	if (fromCache) return (await runAfterware(fromCache, true)) as T
 

@@ -2,21 +2,33 @@ lockfileVersion: 5.3
 
 specifiers:
   '@saltyaom/gql': ../
-  '@saltyaom/gql-inmemory-cache': ../../gql-inmemory-cache
-  '@saltyaom/gql-local-cache': ../../gql-local-cache
+  '@saltyaom/gql-inmemory-cache': ^1.2.1
+  '@saltyaom/gql-local-cache': ^1.2.1
   typescript: ^4.3.2
   vite: ^2.4.4
 
 dependencies:
   '@saltyaom/gql': link:..
-  '@saltyaom/gql-inmemory-cache': link:../../gql-inmemory-cache
-  '@saltyaom/gql-local-cache': link:../../gql-local-cache
+  '@saltyaom/gql-inmemory-cache': 1.2.1
+  '@saltyaom/gql-local-cache': 1.2.1
 
 devDependencies:
   typescript: 4.5.5
   vite: 2.7.13
 
 packages:
+
+  /@saltyaom/gql-inmemory-cache/1.2.1:
+    resolution: {integrity: sha512-u9L7hu9HmU4SDu88dHgwv/x9obiZQmRYF0ac+MsW0/CqJ62aHUsQw1hXS6v/nT5q1/VkOuwvKRHUXFPts9IiqA==}
+    peerDependencies:
+      '@saltyaom/gql': '>= 1.2.2'
+    dev: false
+
+  /@saltyaom/gql-local-cache/1.2.1:
+    resolution: {integrity: sha512-3qNBce+eM5ch26Y/PMR77UD+VmSNW9G3MPN/pb8VKmlQ8+BspByJp+ZYnvfkFmRSjwlIEEFStgT9rQqlTT+MLA==}
+    peerDependencies:
+      '@saltyaom/gql': '>= 1.2.2'
+    dev: false
 
   /esbuild-android-arm64/0.13.15:
     resolution: {integrity: sha512-m602nft/XXeO8YQPUDVoHfjyRVPdPgjyyXOxZ44MK/agewFFkPa8tUo6lAzSWh5Ui5PB4KR9UIFTSBKh/RrCmg==}
