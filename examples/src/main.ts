@@ -3,16 +3,7 @@ import LocalCache from '@saltyaom/gql-local-cache'
 import InMemoryCache from '@saltyaom/gql-inmemory-cache'
 
 client.config('https://api.hifumin.app', {
-	plugins: [
-		// @ts-ignore
-		InMemoryCache({
-			ttl: 60 * 30
-		}),
-		// @ts-ignore
-		LocalCache({
-			ttl: 60 * 60 * 3
-		})
-	]
+	plugins: [InMemoryCache(), LocalCache()]
 })
 
 const runQuery = () => {
