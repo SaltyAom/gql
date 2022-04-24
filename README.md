@@ -1,49 +1,48 @@
 # @saltyaom/gql
-Lightweight graphql client, minify query on fly.
+Lightweight graphql client.
 
 ## Feature
 - No dependencies.
-- Lightweight, just 700 bytes.
-- Supports on both client and server.
+- Lightweight, just 1.4 KB.
+- Run on both client and server.
 - Just simple fetch.
-- Minify query on flies
-- Middleware and Afterware
+- You can write plugins, eg.
+  - [@saltyaom/gql-inmemory-cache](https://github.com/saltyaom/gql-inmemory-cache)
+  - [@saltyaom/gql-local-cache](https://github.com/saltyaom/gql-local-cache)
 - Built-in TypeScript
 
 ## Size
-Should be around 700 bytes, checkout [Bundlephobia](https://bundlephobia.com/package/@saltyaom/gql) for accurate result.
+1.2 is around 1.4 KB, checkout [Bundlephobia](https://bundlephobia.com/package/@saltyaom/gql) for accurate result.
 
 ## Getting start
 ```bash
-yarn add @saltyaom/gql
-
-// Or npm
-npm install @saltyaom/gql --save
+pnpm add @saltyaom/gql
 ```
 
 ## Example
 ```jsx
 import gql, { client } from '@saltyaom/gql'
 
-client.config('https://api.opener.studio/graphql')
+client.config('https://api.hifumin.app/graphql')
 
-gql(`
-  query GetHentaiById($id: Int!) {
-    getHentaiById(id: $id) {
-      success
-      data {
-        title {
-          display
+gql(
+  `query SaltyAomGQL($id: Int!) {
+      nhql {
+        by(id: $id) {
+          data {
+            id
+            title {
+              display
+            }
+          }
         }
       }
+    }`,
+  {
+    variables: {
+      id: 177013
     }
   }
-`,
-{
-  variables: {
-    id: 177013
-  }
-}).then((data) => console.log(data))
 ```
 
 ## Why
@@ -51,7 +50,8 @@ Y'll made GraphQL too complex and heavy.
 
 I just want to fetch GraphQL query here.
 
-## Middleware
+
+## Plugins
 You can implement custom plugin for transforming data, caching, logging, etc.
 
 - middlewares
@@ -69,39 +69,44 @@ You can implement custom plugin for transforming data, caching, logging, etc.
 ### Example
 ```typescript
 import gql, { client } from '@saltyaom/gql'
-import localCache from '@saltyaom/gql-local-cache'
+import LocalCache from '@saltyaom/gql-local-cache'
 
 client.config(
   'https://api.opener.studio/graphql', 
   {
-    plugins: [{
-      afterwares: [
-        ({ data, operationName, variables }) => {
-          console.log('Logger:', data, operationName, variables)
-        }
-      ]
-    }]
+    plugins: [
+      LocalCache(),
+      // Or write your own plugins
+      {
+          afterwares: [
+          ({ data, operationName, variables }) => {
+            console.log('Logger:', data, operationName, variables)
+          }
+        ]
+      }
+    ]
   }
 )
 
-gql(
-	`query GetHentaiById($id: Int!) {
-      getHentaiById(id: $id) {
-        success
-        data {
-          title {
-            display
-			      japanese
+// You can pass generic if you're using TypeScript
+gql<ReturnType, VariableType>(
+  `query SaltyAomGQL($id: Int!) {
+      nhql {
+        by(id: $id) {
+          data {
+            id
+            title {
+              display
+            }
           }
         }
       }
+    }`,
+  {
+    variables: {
+      id: 177013
     }
-  `,
-	{
-		variables: {
-			id: 177013
-		}
-	}
+  }
 ).then((data) => {
   console.log(data)
 })
