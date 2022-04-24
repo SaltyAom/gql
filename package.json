@@ -1,7 +1,7 @@
 {
 	"name": "@saltyaom/gql",
 	"description": "Fetch as GraphQL",
-	"version": "1.2.3",
+	"version": "1.2.4",
 	"main": "./build/index.js",
 	"module": "./build/esm/index.mjs",
 	"exports": {
