@@ -2,11 +2,15 @@ lockfileVersion: 5.3
 
 specifiers:
   '@saltyaom/gql': ../
+  '@saltyaom/gql-inmemory-cache': ../../gql-inmemory-cache
+  '@saltyaom/gql-local-cache': ../../gql-local-cache
   typescript: ^4.3.2
   vite: ^2.4.4
 
 dependencies:
   '@saltyaom/gql': link:..
+  '@saltyaom/gql-inmemory-cache': link:../../gql-inmemory-cache
+  '@saltyaom/gql-local-cache': link:../../gql-local-cache
 
 devDependencies:
   typescript: 4.5.5

@@ -108,6 +108,25 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 	let _plugins = basePlugins.concat(plugins)
 	let fromCache: T | null = null
 
+	const runAfterware = async (rawData: T | null, fromCache = false) => {
+		let data = rawData
+
+		for (let plugin of _plugins)
+			for (let afterware of plugin.afterwares || []) {
+				let mutated = await afterware({
+					data,
+					operationName,
+					variables,
+					query,
+					fromCache
+				})
+
+				if (mutated) data = mutated as T
+			}
+
+		return data
+	}
+
 	for (let plugin of _plugins)
 		for (let middleware of plugin.middlewares || []) {
 			let predefined = await middleware({
@@ -120,7 +139,7 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 			if (!fromCache && predefined) fromCache = predefined as T
 		}
 
-	if (fromCache) return fromCache
+	if (fromCache) return (await runAfterware(fromCache, true)) as T
 
 	try {
 		let controller = new AbortController()
@@ -153,22 +172,14 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 			return res.json()
 		})
 
+		await runAfterware(data)
+
 		if (errors) throw errors
-
-		for (let plugin of _plugins)
-			for (let afterware of plugin.afterwares || []) {
-				let mutated = await afterware({
-					data,
-					operationName,
-					variables,
-					query
-				})
-
-				if (mutated) data = mutated
-			}
 
 		return data
 	} catch (error) {
+		await runAfterware(null)
+
 		return error as Error
 	}
 }

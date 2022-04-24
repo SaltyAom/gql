@@ -32,7 +32,8 @@ export interface DataOperation<
 	T extends Object = Object,
 	V extends Object = Object
 > extends Operation<V> {
-	data: T
+	data: T | null
+	fromCache: boolean
 }
 
 export type Middleware<T extends Object = Object, V extends Object = Object> = (
@@ -40,7 +41,7 @@ export type Middleware<T extends Object = Object, V extends Object = Object> = (
 ) => T | Promise<T> | undefined | null | void
 
 export type Afterware<T extends Object = Object, V extends Object = Object> = (
-	opeartion: DataOperation<T, V>
+	operation: DataOperation<T, V>
 ) => T | Promise<T> | undefined | null | void
 
 export interface Plugin<T extends Object = Object, V extends Object = Object> {
