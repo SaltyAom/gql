@@ -135,7 +135,7 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 	}
 
 	let _plugins = basePlugins.concat(plugins)
-	let checksum = hash(query + variables)
+	let checksum = hash(query + JSON.stringify(variables))
 
 	for (let plugin of _plugins)
 		for (let middleware of plugin.middlewares || []) {
