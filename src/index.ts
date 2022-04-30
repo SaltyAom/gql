@@ -28,19 +28,19 @@ export const createClient: CreateClient = (
 	{ config = {}, plugins = [], timeout = 5000 } = {}
 ) => {
 	const client: Client = {
-		_e: '',
-		_c: {},
-		_p: [],
-		_t: 10000,
+		e: '',
+		c: {},
+		p: [],
+		t: 10000,
 
 		config: function (
 			endpoint,
 			{ config = {}, plugins = [], timeout = 10000 } = {}
 		) {
-			this._e = endpoint
-			this._c = config
-			this._p = plugins
-			this._t = timeout
+			this.e = endpoint
+			this.c = config
+			this.p = plugins
+			this.t = timeout
 		}
 	}
 
@@ -59,6 +59,17 @@ export const createClient: CreateClient = (
  **/
 const defaultClient = createClient('')
 export { defaultClient as client }
+
+const hashTable: Record<string, number> = {}
+
+// https://stackoverflow.com/a/52171480
+export const hash = (s: string) => {
+	let h = 9
+
+	for (let i = 0; i < s.length; ) h = Math.imul(h ^ s.charCodeAt(i++), 9 ** 9)
+
+	return h = h ^ (h >>> 9)
+}
 
 /**
  * SaltyAom's GraphQL
@@ -102,20 +113,16 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 		method = 'POST'
 	}: Options<V> = {}
 ): Promise<T | GraphQLError[] | Error> => {
-	let { _e: endpoint, _c: fetchConfig, _p: basePlugins } = client
-	let operationName = getOperationName(query)
+	let { e: endpoint, c: fetchConfig, p: basePlugins } = client
 
-	let _plugins = basePlugins.concat(plugins)
-	let fromCache: T | null = null
-
-	const runAfterware = async (rawData: T | null, fromCache = false) => {
+	let runAfterware = async (rawData: T | null, fromCache = false) => {
 		let data = rawData
 
 		for (let plugin of _plugins)
 			for (let afterware of plugin.afterwares || []) {
 				let mutated = await afterware({
+					hash: checksum,
 					data,
-					operationName,
 					variables,
 					query,
 					fromCache
@@ -127,21 +134,19 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 		return data
 	}
 
-	for (let plugin of _plugins) {
-		if (fromCache) break
+	let _plugins = basePlugins.concat(plugins)
+	let checksum = hash(query + variables)
 
+	for (let plugin of _plugins)
 		for (let middleware of plugin.middlewares || []) {
-			let predefined = await middleware({
-				operationName,
+			let cache = await middleware({
+				hash: checksum,
 				variables,
 				query
 			})
 
-			if (predefined) fromCache = predefined as T
+			if (cache) return (await runAfterware(cache as T, true)) as T
 		}
-	}
-
-	if (fromCache) return (await runAfterware(fromCache, true)) as T
 
 	try {
 		let controller = new AbortController()
@@ -166,7 +171,7 @@ const gql = async <T extends Object = Object, V extends Object = Object>(
 			body: JSON.stringify({
 				query,
 				variables,
-				operationName
+				operationName: getOperationName(query)
 			})
 		}).then((res) => {
 			if (timeout) clearTimeout(timeout)

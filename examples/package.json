@@ -8,8 +8,8 @@
   },
   "dependencies": {
     "@saltyaom/gql": "../",
-    "@saltyaom/gql-inmemory-cache": "^1.2.1",
-    "@saltyaom/gql-local-cache": "^1.2.1"
+    "@saltyaom/gql-inmemory-cache": "../../gql-inmemory-cache",
+    "@saltyaom/gql-local-cache": "../../gql-local-cache"
   },
   "devDependencies": {
     "typescript": "^4.3.2",

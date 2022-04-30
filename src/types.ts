@@ -1,8 +1,8 @@
 export interface Client {
-	_e: string
-	_c: FetchConfig
-	_p: Plugin[]
-	_t: number
+	e: Readonly<string>
+	c: Readonly<FetchConfig>
+	p: Readonly<Plugin[]>
+	t: Readonly<number>
 
 	config: Configure<void>
 }
@@ -24,7 +24,7 @@ export type CreateClient = Configure<Client>
 export type FetchConfig = Omit<RequestInit, 'body'>
 
 export interface Operation<V extends Object = Object> {
-	operationName: string
+	hash: number
 	variables: V
 	query: string
 }
