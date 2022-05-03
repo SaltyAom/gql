@@ -1,47 +1,44 @@
 {
-	"name": "@saltyaom/gql",
-	"description": "Fetch as GraphQL",
-	"version": "1.3.1",
-	"main": "./build/index.js",
-	"module": "./build/esm/index.mjs",
-	"exports": {
-		".": {
-			"require": "./build/index.js",
-			"import": "./build/esm/index.mjs"
-		}
-	},
-	"typings": "build/index.d.ts",
-	"license": "MIT",
-	"author": {
-		"name": "saltyaom",
-		"url": "https://github.com/SaltyAom",
-		"email": "saltyaom@gmail.com"
-	},
-	"homepage": "https://github.com/saltyaom/graphql-client",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/saltyaom/graphql-client"
-	},
-	"bugs": "https://github.com/SaltyAom/graphql-client/issues",
-	"keywords": [
-		"graphql",
-		"graphql client"
-	],
-	"scripts": {
-		"build": "pnpm build:cjs && yarn build:esm && tsc && tsc --project tsconfig.es5.json && yarn dist:iife",
-		"build:cjs": "node builders/common.js",
-		"build:esm": "node builders/esm.js",
-		"dist:iife": "node builders/iife.js"
-	},
-	"devDependencies": {
-		"@types/node": "^17.0.12",
-		"esbuild": "^0.12.18",
-		"typescript": "^4.3.5"
-	},
-	"dependencies": {
-		"isomorphic-unfetch": "^3.1.0"
-	},
-	"peerDependencies": {
-		"graphql": ">=15.0.0"
-	}
+  "name": "@saltyaom/gql",
+  "description": "Fetch as GraphQL",
+  "version": "1.3.2",
+  "main": "./build/index.js",
+  "module": "./build/esm/index.mjs",
+  "exports": {
+    ".": {
+      "require": "./build/index.js",
+      "import": "./build/esm/index.mjs"
+    }
+  },
+  "typings": "build/index.d.ts",
+  "license": "MIT",
+  "author": {
+    "name": "saltyaom",
+    "url": "https://github.com/SaltyAom",
+    "email": "saltyaom@gmail.com"
+  },
+  "homepage": "https://github.com/saltyaom/graphql-client",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/saltyaom/graphql-client"
+  },
+  "bugs": "https://github.com/SaltyAom/graphql-client/issues",
+  "keywords": [
+    "graphql",
+    "graphql client"
+  ],
+  "scripts": {
+    "build": "pnpm build:cjs && yarn build:esm && tsc && tsc --project tsconfig.es5.json && yarn dist:iife",
+    "build:cjs": "node builders/common.js",
+    "build:esm": "node builders/esm.js",
+    "dist:iife": "node builders/iife.js"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.12",
+    "esbuild": "^0.12.18",
+    "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "isomorphic-unfetch": "^3.1.0"
+  }
 }
